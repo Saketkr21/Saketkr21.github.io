@@ -1,0 +1,95 @@
+Certified Hadoop Core Developer 136
+Certified BigData  R Programmer 101a 1
+Certified Big Data - Hadoop Developer 27
+Certified Big Data - NoSQL MongoDB Developer 53
+HDP Certified Administrator (HDPCA) Exam 53
+Datastax - Certified Administrator on Apache Cassandra 1
+Certified MarkLogic 7 Administrator 1
+Certified BigData NoSQL MongoDB Administrator 301a 14
+HDP Certified Java Developer (HDPCD-Java) Exam 46
+Coursera Hadoop Platform and Application Framework 39
+Coursera Introduction to Big Data 50
+Certified MarkLogic 7 Developer 41
+Splunk Certified Power User 43
+HDP Certified Developer (HDPCD) Exam 38
+Cloudera - CCA Spark and Hadoop Developer 200
+Coursera Introduction to Big Data Analytics 10
+Datastax - Certified Developer on Apache Cassandra 1
+Kafka Developer 14
+Certified BigData  Hbase Developer 201a 1
+Certified BigData Hive Developer 202a 57
+Certified Apache Pig Developer - Basic 210
+The Analytics Edge - MITx 2
+Coursera Machine Learning With Big Data 2
+Coursera R Programming 2
+C100DEV  MongoDB Certified Developer Associate Exam 2
+C100DBA  MongoDB Certified DBA Associate Exam 2
+M101 - MongoDB for Developers 2
+M102 MongoDB for DBAs 2
+M202 MongoDB Advanced Deployment and Operations 2
+E20-007 Data Science and Big Data Analytics Exam 2
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-500 3
+Google Analytics certification 2
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-501 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-502 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-503 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-504 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-505 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-506 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-507 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-508 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-509 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-510 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-511 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-512 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-513 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-514 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-515 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-516 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-517 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-518 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-519 1
+Certified Big Data  NoSQL MongoDB Developer 44
+
+
+
+
+
+
+Certified Hadoop Core Developer 45
+Certified BigData  R Programmer 101a 1
+Datastax - Certified Administrator on Apache Cassandra 1
+Coursera Hadoop Platform and Application Framework 12
+Coursera Introduction to Big Data 14
+Splunk Certified Power User 15
+HDP Certified Developer (HDPCD) Exam 17
+Cloudera - CCA Spark and Hadoop Developer 70
+Coursera Introduction to Big Data Analytics 4
+Kafka Developer 8
+Certified Apache Pig Developer - Basic 61
+Coursera R Programming 1
+C100DEV  MongoDB Certified Developer Associate Exam 1
+C100DBA  MongoDB Certified DBA Associate Exam 1
+M101 - MongoDB for Developers 1
+M102 MongoDB for DBAs 1
+E20-007 Data Science and Big Data Analytics Exam 1
+Google Analytics certification 1
+Certified Big Data - Hadoop Developer 9
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-502 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-508 1
+Cloudera Certified Administrator for Apache Hadoop CDH5 CCA-513 1
+HDP Certified Java Developer (HDPCD-Java) Exam 17
+Certified Big Data  NoSQL MongoDB Developer 11
+Certified BigData Hive Developer 202a 21
+HDP Certified Administrator (HDPCA) Exam 18
+Certified Big Data - NoSQL MongoDB Developer 19
+Certified MarkLogic 7 Developer 6
+Certified BigData NoSQL MongoDB Administrator 301a 8
+
+
+
+
+
+
+
+
