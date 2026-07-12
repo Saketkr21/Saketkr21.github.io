@@ -171,6 +171,9 @@ More fix-ups as they surface. Promoting a second first-class target (BigQuery? D
 
 If you're staring down a Snowflake → Spark migration and don't want to rewrite your models, [try it](https://pypi.org/project/dbt-polyglot/). Star the repo if it saved you time, and open an issue when it doesn't.
 
+### ⭐⭐⭐ Star the repo if you find this useful. ⭐⭐⭐
+![Upvote Please](../public/upvote-pls.png)
+
 ---
 
 *I'm a Senior Data Engineer working on open lakehouses and dbt tooling. I write about migration battle-scars, dbt patterns, and the plumbing that makes data platforms feel boring. Portfolio: [saketkumar.pages.dev](https://saketkumar.pages.dev) · [LinkedIn](https://linkedin.com/in/saketkr21) · [GitHub](https://github.com/Saketkr21).*

@@ -118,7 +118,8 @@ If you run through a module and something's confusing, missing, or wrong: **open
 
 If you have a favorite failure mode I haven't covered — Delta Lake conflict resolution, Kafka Streams state stores, Airflow deferrable operators — a PR with a new module in Break → Detect → Fix → Prove format is very welcome.
 
-Star it if it saves you an incident.
+### ⭐⭐⭐ Star the repo if you find this useful. ⭐⭐⭐
+![Upvote Please](../public/upvote-pls.png)
 
 ---
 
