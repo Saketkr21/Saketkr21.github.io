@@ -1,0 +1,32 @@
+---
+import { experience } from '../config';
+---
+
+<section id="experience" class="section">
+  <header class="section__header">
+    <span class="section__eyebrow">Experience</span>
+    <h2 class="section__title">Where I've built things.</h2>
+  </header>
+
+  <ol class="timeline" role="list">
+    {experience.map((job) => (
+      <li class="timeline__item">
+        <div class="timeline__meta">
+          <span class="timeline__date">{job.from} — {job.to}</span>
+          <span class="timeline__loc">{job.location}</span>
+        </div>
+        <div class="timeline__body">
+          <h3 class="timeline__role">
+            {job.role} <span class="timeline__co">· {job.company}</span>
+          </h3>
+          <p class="timeline__sub">{job.subtitle}</p>
+          <ul class="timeline__wins" role="list">
+            {job.highlights.map((h) => (
+              <li><strong>{h.title}:</strong> {h.body}</li>
+            ))}
+          </ul>
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>

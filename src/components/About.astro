@@ -1,0 +1,40 @@
+---
+import { quickFacts } from '../config';
+---
+
+<section id="about" class="section">
+  <header class="section__header">
+    <span class="section__eyebrow">About</span>
+    <h2 class="section__title">Data platforms should be fast, cheap, and boring&nbsp;— in that order.</h2>
+  </header>
+
+  <div class="about">
+    <div class="about__body">
+      <p>
+        I'm a <strong>Senior Data Engineer</strong> with 6+ years designing and scaling cloud-native data platforms. I've delivered
+        <strong>$45K+ in annual Snowflake credit savings</strong> on the flagship ELT pipeline alone,
+        <strong>50% dbt model speed-ups</strong>, and I'm currently leading migration of
+        <strong>440+ dbt models</strong> from Snowflake to a fully open-source lakehouse — Iceberg on S3,
+        Spark Thrift compute, dbt-spark, Project Nessie catalog, and Airflow 3.
+      </p>
+      <p>
+        I gravitate toward the "unsexy" wins: cost curves, dialect gaps, correctness fixtures, migration safety.
+        I open-source what I'd want to <em>find</em>, not what I'd want to <em>ship</em>.
+        Multi-cloud (AWS · GCP · Azure), GDPR/PII-aware by design.
+      </p>
+      <p>
+        Off-hours: cosmology, open-source data tooling, and slowly writing more than I read.
+      </p>
+    </div>
+    <aside class="about__aside">
+      <dl class="quick-facts">
+        {quickFacts.map((f) => (
+          <>
+            <dt>{f.label}</dt>
+            <dd>{f.value}</dd>
+          </>
+        ))}
+      </dl>
+    </aside>
+  </div>
+</section>

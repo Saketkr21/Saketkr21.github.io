@@ -1,0 +1,83 @@
+name: Publish blogs to whiz.pub
+
+# Triggers on every push to main that touches blogs/**.md.
+# Diffs against the previous commit and only republishes files that actually changed.
+# Each publish is an idempotent upsert-by-slug (POST /v1/posts).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'blogs/**.md'
+      - '!blogs/README.md' # never trigger on README.md
+      - 'scripts/publish-to-whiz.py'
+      - '.github/workflows/publish-blogs.yml'
+  workflow_dispatch:
+    inputs:
+      publish_all:
+        description: 'Publish ALL blogs (ignore diff, use when you rotate API keys or backfill)'
+        type: boolean
+        default: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (with 2 commits for diff)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Detect changed blog files
+        id: diff
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event.inputs.publish_all }}" = "true" ]; then
+            FILES=$(ls blogs/*.md 2>/dev/null || true)
+            echo "mode=all" >> "$GITHUB_OUTPUT"
+          else
+            FILES=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD -- 'blogs/*.md' 'blogs/**/*.md' || true)
+            echo "mode=diff" >> "$GITHUB_OUTPUT"
+          fi
+          {
+            echo "files<<EOF"
+            echo "$FILES"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          echo "── Files to publish ($(echo "$FILES" | grep -c . || true)): ──"
+          echo "$FILES"
+
+      - name: Publish each changed markdown file
+        if: steps.diff.outputs.files != ''
+        env:
+          WHIZ_API_KEY: ${{ secrets.WHIZ_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${WHIZ_API_KEY:-}" ]; then
+            echo "✗ WHIZ_API_KEY secret is not set."
+            echo "  Add it at: Repo → Settings → Secrets and variables → Actions → New secret"
+            exit 1
+          fi
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            [ ! -f "$file" ] && { echo "(skip missing) $file"; continue; }
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "→ Publishing: $file"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            python3 scripts/publish-to-whiz.py "$file"
+          done <<< "${{ steps.diff.outputs.files }}"
+
+      - name: Summary
+        if: always()
+        run: |
+          if [ -z "${{ steps.diff.outputs.files }}" ]; then
+            echo "No blog files changed. Nothing to publish."
+          else
+            echo "Publish job complete."
+          fi

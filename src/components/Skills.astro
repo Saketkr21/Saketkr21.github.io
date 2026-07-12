@@ -1,0 +1,32 @@
+---
+import { skills, certifications } from '../config';
+---
+
+<section id="skills" class="section">
+  <header class="section__header">
+    <span class="section__eyebrow">Toolkit</span>
+    <h2 class="section__title">The stack I actually use.</h2>
+  </header>
+
+  <div class="skills">
+    {skills.map((group) => (
+      <div class="skills__group">
+        <h3 class="skills__title">{group.title}</h3>
+        <ul role="list">
+          {group.items.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <div class="certs">
+    <h3 class="certs__title">Certifications</h3>
+    <ul class="certs__list" role="list">
+      {certifications.map((c) => (
+        <li>
+          <strong>{c.name}</strong> · {c.issuer} ({c.year}{c.extra ? `, ${c.extra}` : ''})
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,33 @@
+---
+import { site } from '../config';
+---
+
+<section id="contact" class="section section--contact">
+  <header class="section__header">
+    <span class="section__eyebrow">Get in touch</span>
+    <h2 class="section__title">The best inbox is a short one.</h2>
+  </header>
+
+  <p class="contact__lede">
+    I'm always up for talking about lakehouses, dbt patterns, migration battle-scars, or interesting job problems.
+    Fastest reach — email or LinkedIn.
+  </p>
+  <ul class="contact__list" role="list">
+    <li>
+      <span class="contact__label">Email</span>
+      <a href={`mailto:${site.urls.email}`}>{site.urls.email}</a>
+    </li>
+    <li>
+      <span class="contact__label">LinkedIn</span>
+      <a href={site.urls.linkedin} target="_blank" rel="noopener">{site.urls.linkedinLabel}</a>
+    </li>
+    <li>
+      <span class="contact__label">GitHub</span>
+      <a href={site.urls.github} target="_blank" rel="noopener">{site.urls.githubLabel}</a>
+    </li>
+    <li>
+      <span class="contact__label">Résumé</span>
+      <a href={site.urls.resumePdf} target="_blank" rel="noopener">Download PDF</a>
+    </li>
+  </ul>
+</section>

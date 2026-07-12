@@ -1,0 +1,37 @@
+---
+import { projects } from '../config';
+---
+
+<section id="projects" class="section">
+  <header class="section__header">
+    <span class="section__eyebrow">Featured Work</span>
+    <h2 class="section__title">Open-source projects I ship &amp; maintain.</h2>
+  </header>
+
+  <ol class="projects" role="list">
+    {projects.map((p) => (
+      <li class="project">
+        <div class="project__index">{p.number}</div>
+        <div class="project__body">
+          {p.tags && p.tags.length > 0 && (
+            <div class="project__meta">
+              {p.tags.map((t, i) => (
+                <span class={`tag ${i === 0 && t.toLowerCase().includes('live') ? 'tag--live' : ''}`}>{t}</span>
+              ))}
+            </div>
+          )}
+          <h3 class="project__title">{p.title}</h3>
+          <p class="project__lede">{p.description}</p>
+          <ul class="project__stack" role="list">
+            {p.stack.map((s) => <li>{s}</li>)}
+          </ul>
+          <div class="project__links">
+            {p.links.map((l) => (
+              <a href={l.url} target="_blank" rel="noopener" class="link link--arrow">{l.label} →</a>
+            ))}
+          </div>
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>
