@@ -119,7 +119,15 @@ If you run through a module and something's confusing, missing, or wrong: **open
 If you have a favorite failure mode I haven't covered — Delta Lake conflict resolution, Kafka Streams state stores, Airflow deferrable operators — a PR with a new module in Break → Detect → Fix → Prove format is very welcome.
 
 ### ⭐⭐⭐ Star the repo if you find this useful. ⭐⭐⭐
-![Upvote Please](../public/upvote-pls.png)
+<!-- ![Upvote Please](../public/upvote-pls.png) -->
+
+<div style="text-align: center; margin: 1.5rem 0;">
+  <img 
+    src="https://raw.githubusercontent.com/Saketkr21/Saketkr21.github.io/main/public/upvote-pls.png"
+    alt="Can you please upvote !!" 
+    style="width: 100%; max-width: 320px; height: auto; display: inline-block; border-radius: 8px;" 
+  />
+</div>
 
 ---
 
