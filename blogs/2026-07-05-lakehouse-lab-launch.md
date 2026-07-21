@@ -1,122 +1,193 @@
 ---
-title: 58 broken pipelines you can fix on your laptop
+title: break your pipeline (before prod does it for you)
 slug: lakehouse-lab
-summary: A production-challenges Data Engineering curriculum. Break Spark, Iceberg, Kafka, Debezium, dbt, and Airflow at small scale, watch them fail in the UI, and fix them — 58 modules, laptop-safe.
+summary: 58 broken pipelines, one laptop, zero cloud bill. the DE curriculum for people who've never been on-call yet.
 tags: [spark, iceberg, kafka, debezium, dbt, airflow, data-engineering, open-source]
 status: published
 ---
 
-# 58 broken pipelines you can fix on your laptop
+# break your pipeline (before prod does it for you)
 
-**Every DE tutorial teaches you what *works*. [`lakehouse-lab`](https://github.com/Saketkr21/lakehouse-lab) is built to teach you what *breaks* — and how to fix it.**
-
----
-
-## The gap
-
-There's a specific hole in most data-engineering learning material.
-
-You can find great tutorials for spinning up Spark, running your first dbt model, or streaming from Kafka. What's missing is the entire middle chapter of the actual job: **things breaking**. Skewed joins that hang for hours. Executor OOM on a shuffle. A Kafka consumer that quietly falls behind. An Iceberg table that accumulates orphan files until reads slow to a crawl. A Debezium slot that never releases WAL. A dbt incremental model that silently miscalculates on late-arriving data.
-
-You don't learn to spot these until they happen in production. And when they do, you're scared, on-call, and Googling.
-
-I built `lakehouse-lab` as **58 pipelines designed to break in specific, diagnostic ways** — so you can meet these failure modes at small scale, on your laptop, before they meet you in production.
+### 58 broken pipelines, one laptop, zero cloud bill.
 
 ---
 
-## The shape: Break → Detect → Fix → Prove
+## TL;DR
 
-Every module follows one loop:
+you know what your Spark job is *supposed* to look like. you don't know what it looks like when it breaks. that's the tutorial gap.
 
-1. **Break.** Run a pipeline in a way that reproduces a real-world pathology.
-2. **Detect.** Find the symptom in the Spark UI, Kafka UI, Iceberg metadata, or dbt logs — the same tools you'd have in prod.
-3. **Fix.** Apply a targeted change (a config knob, a code rewrite, a partitioning strategy).
-4. **Prove.** Rerun. Compare metrics before/after. Watch the pathology disappear in the UI.
+i built **[`lakehouse-lab`](https://github.com/Saketkr21/lakehouse-lab)** — **58 pipelines designed to break in specific, named ways.** break them on your laptop. watch them fail in the same UIs you'd have in prod. fix them. prove it in numbers.
 
-Each module is 20-45 minutes. Every one has a `metrics_diff` table showing the actual improvement, not a hand-wave.
+**stack:** Spark 4.0 · Iceberg · Delta · Hudi · Kafka · Debezium · dbt · Airflow · Nessie · Polaris · Prometheus · Grafana — all local, all Dockerized.
 
----
-
-## Laptop-safe by design
-
-The whole thing runs on a laptop. No cloud bill.
-
-Two Docker profiles:
-
-- **`make up`** — a tuned ~3 GB Spark cluster. Comfortable for most modules.
-- **`make up-constrained`** — a deliberately smaller ~2 GB cluster. **This is the interesting one.** OOM and spill become *real events*, not hypotheticals. When the module asks you to break the executor, you actually break it — not simulate it.
-
-A shared `common/` toolkit provides the primitives:
-
-- `datagen` — synthesizes skewed and wide data on the fly (no giant files stored on disk).
-- `metrics_diff` — dumps before/after query metrics into a comparable table.
-- `iceberg_meta` — table health snapshots (data-file count, snapshots, manifests, orphans).
-- `profiles` — flip tuned vs constrained per-notebook via `common.profiles.apply_profile()`.
-- `spark_session` — Spark Connect helper with a `reconnect()` path when things wedge.
+runs on 8 GB RAM. no AWS account. Apache 2.0. star it if it helps.
 
 ---
 
-## The seven phases
+## the 2 AM thing
 
-**Phase 1 — Spark performance pathologies** (`SPK-1..SPK-10`). Skew is the flagship. Then executor OOM, driver OOM, spill, join strategies, AQE, partition pruning, caching failures, shuffle mechanics, internals. Each pathology has a specific Spark UI signature — you learn to recognize them *by shape*.
+it's 2 AM. your dbt job has been failing for forty minutes.
 
-**Phase 2 — Iceberg lakehouse correctness** (`LAK-1..LAK-10`). Formats, the small-files problem, snapshot management, orphan cleanup, manifest hygiene, schema evolution, partitioning strategy, `MERGE INTO`, time travel, Iceberg internals. The stuff that separates "using Iceberg" from "operating an Iceberg lakehouse."
+`EXPLAIN` looks fine. Spark UI shows one executor at 100%, eleven others sitting idle. Twitter's no help. Stack Overflow's got a 2019 answer that doesn't quite fit.
 
-**Phase 3 — Kafka + Structured Streaming** (`KAF-1..6`, `STR-1..3`). Hot partitions, consumer lag, rebalance storms, retention vs compaction, delivery semantics, poison pills and dead-letter queues. Then streaming-specific: watermarking, checkpoints, backpressure. All laptop-scale but with real semantics.
+two hours later you piece it together: **skewed join.** one key holds 92% of the rows.
 
-**Phase 4 — Debezium CDC end-to-end** (`CDC-1..CDC-9`). Postgres → Debezium → Kafka → Spark → Iceberg. Logical replication basics, connector bring-up, snapshot modes, event envelope shape, the classic WAL/slot growth failure, deletes with replica identity, streaming `MERGE` into Iceberg, mid-stream schema evolution, and a failure-mode tour.
+but nobody told you this was a *specific named thing*. you just knew "the job was slow." you didn't know the Spark UI's Event Timeline shows *that exact shape*. you didn't know AQE has a skew-join splitter that would've handled it in one config change.
 
-**Phase 5 — dbt quality with Great Expectations** (`DBT-1..DBT-10`). Materializations, incremental strategies including late-arriving lookback, SCD2 snapshots, schema-change tolerance, testing layering, quarantine tables, `dbt-expectations` + `Great Expectations`, sources / freshness / contracts / exposures, macros, slim-CI setup.
+you learned it the way most of us do: at 4 AM. on-call. team lead asleep.
 
-**Phase 6 — Airflow** (`AF-1..AF-10`). Idempotency, the execution model, catchup and backfill, retries/SLA, sensor modes, trigger rules and branching, dynamic mapping, XCom limits, assets / data-aware scheduling in Airflow 3, and a full dbt + Spark end-to-end DAG.
-
-**Phase 7 — Capstone.** End-to-end pipeline (`CAP-1`), an **incident simulator** with eight on-call cards (`CAP-2`), an observability track adding Prometheus + Grafana + exporters (`CAP-3`), and a suggested learning path across all 58 modules (`CAP-4`).
+**that's the gap.** every DE tutorial teaches you the happy path. what's missing is the *middle chapter* of the actual job — the failure modes, the UIs you can't read yet, the runbooks that don't exist.
 
 ---
 
-## Why the incident simulator matters
+## the fix
 
-The incident simulator (`CAP-2`) is where I'd start if I could only do one module.
+**58 pipelines. designed to break. that's the point.**
 
-Eight cards. Each is an on-call scenario: a real symptom — a stale mart, a broken CDC feed, a partitioned table that's suddenly slow, a Kafka consumer that's fallen 4M messages behind. You get a runbook shell. You have to diagnose using the tools available in the sandbox — no cheating with logs from the future. Then you fix it.
+each one meets you where a real prod failure mode would — at small scale, on your laptop, *before* it meets you at 2 AM.
 
-This is the closest thing I've found to actually practicing on-call without waiting for pain to happen to you.
+every module is 20–45 minutes. same loop every time:
+
+| step | what happens |
+|---|---|
+| **break** | run a pipeline in a way that reproduces a real prod pathology |
+| **detect** | find the symptom in the same UI you'd have in prod — Spark UI, Kafka UI, dbt logs, Iceberg metadata |
+| **fix** | apply a targeted change — config knob, code rewrite, partition strategy |
+| **prove** | rerun. compare before/after in a `metrics_diff` table. numbers, not vibes. |
+
+that last step is the whole point. "this is faster now" isn't good enough — the module shows you *shuffle bytes before vs after, task time p99 before vs after, data file count before vs after*. you leave with receipts.
 
 ---
 
-## How to use it
+## what one module actually feels like — SPK-1 (Data Skew)
+
+ninety seconds of setup. `datagen` synthesizes a skewed dataset — 90% of rows share one key. you run the join.
+
+**the Spark UI shows exactly what you saw at 2 AM.** one long task. eleven short ones. Event Timeline: a bar that stretches to the right like it's mocking you.
+
+then three named fixes, in sequence:
+
+- **broadcast the small side** → shuffle vanishes.
+- **AQE skew-join on** → runtime skew-detection splits the hot partition. the logs *literally* say it split.
+- **salt the hot key manually** → compare with AQE. understand why the automatic path is usually better.
+
+30 minutes. three named remedies for one production symptom. measurable before/after in every step. you'll recognize the pattern *by shape* the next time you see it in real prod.
+
+**every one of the 58 modules is that shape.**
+
+---
+
+## what's inside — 7 phases, 58 modules
+
+| phase | track | modules | what you learn to spot |
+|---|---|---|---|
+| **1** | spark performance | `SPK-1..10` | skew · OOM (executor + driver) · spill · joins · AQE · pruning · caching · shuffle |
+| **2** | iceberg lakehouse | `LAK-1..10` | small files · snapshot growth · orphans · manifest bloat · schema evo · MERGE · time travel |
+| **2.5** | modern catalogs | `CAT-1..5` | nessie REST + git-like branching · polaris RBAC · cross-catalog federation |
+| **2.6** | hudi | `LAK-11..12` | CoW vs MoR write amp · `.hoodie/` timeline |
+| **3** | kafka + streaming | `KAF-1..6` + `STR-1..3` | hot partitions · consumer lag · rebalance storms · retention · poison pills · watermarks · checkpoints |
+| **4** | debezium CDC | `CDC-1..9` | postgres → kafka → spark → iceberg. WAL slot growth, schema evo, MERGE upserts |
+| **5** | dbt quality | `DBT-1..10` | incrementals · late-arriving · SCD2 · quarantine · contracts · Great Expectations |
+| **6** | airflow | `AF-1..10` | Airflow 3 execution model · idempotency · dynamic mapping · Assets |
+| **7** | capstone | `CAP-1..4` | e2e pipeline · **8-card on-call sim** · Prometheus + Grafana observability · full learning path |
+
+every module: verified end-to-end. every code cell: Connect-safe. every teardown: `make clean` and it's gone.
+
+---
+
+## laptop-safe (like, actually)
+
+**$0 cloud bill. no AWS. no provisioning. no "we'll bill you if you leave it running."**
+
+**prereqs:**
+- 8 GB RAM (base stack)
+- 16 GB comfortable (with CDC + monitoring add-ons)
+- Docker Desktop + `uv`. that's it.
+
+**two Docker profiles — dial your pain level:**
+- `make up` → tuned ~3 GB Spark cluster. fine for most modules.
+- `make up-constrained` → deliberately smaller ~2 GB. **OOM and spill are real events, not simulations.** when the module tells you to break the executor, you actually break it.
+
+five containers in the base. opt-in stacks stack on top:
+- `make catalogs-up` → Nessie + Polaris + Nimtable UI
+- `make cdc-up` → Postgres + Debezium
+- `make superset-up` → SQL explorer over Spark Thrift
+- `make monitoring-up` → **Prometheus + Grafana + live dashboards.** watch Kafka consumer lag climb, watch a Postgres replication slot grow — all live, all in your browser.
+
+`make clean` wipes it. no state left behind.
+
+---
+
+## the flagship — CAP-2 (Incident Simulator)
+
+if you only do one thing here, do this.
+
+**8 cards. each one is a real on-call scenario hitting you the way it hits you:**
+
+- stale mart at 8 AM
+- CDC feed that silently stopped
+- partitioned table 20× slower to read out of nowhere
+- kafka consumer 4M messages behind
+- and 4 more
+
+you get a runbook shell. diagnose with only the tools available in the sandbox — same UIs you'd have in prod. fix it. compare your postmortem to the module's own — did you find the *actual* root cause or just a plausible one?
+
+**closest thing to on-call practice without the on-call.**
+
+prepping for a DE interview? do CAP-2 first. every card is a real production war story — the cards double as elite system-design and diagnostic-reasoning practice.
+
+---
+
+## who this is for
+
+- **junior / mid DEs** → see prod failure modes without prod risk. fix them 58 times before your career forces you to.
+- **interview prep** → incident cards are on-call practice + system-design practice at once.
+- **team leads doing onboarding** → pick 5 modules, run them as a half-day. team walks out having *actually seen* a shuffle spill, a broken CDC feed, an orphan-file mistake.
+- **career switchers into DE** → shortest path from "i know python" to "i can debug a Spark job."
+- **anyone reading a Spark/Iceberg/Kafka book** → empirical modules to run alongside the theory.
+
+---
+
+## try it (5 min to first module)
 
 ```bash
 git clone https://github.com/Saketkr21/lakehouse-lab
 cd lakehouse-lab
 uv sync
-make up               # or `make up-constrained` for OOM/spill modules
+make up
 make jupyter
 ```
 
-Open <http://localhost:8888>. Follow `docs/LEARNING_PATH.md` for the curated ordering — modules build on each other. Or jump around; each one is self-contained.
+open http://localhost:8888. pick a module. run it. see something break.
 
-Guides that ship with the repo:
+start ordered? → [`docs/LEARNING_PATH.md`](https://github.com/Saketkr21/lakehouse-lab/blob/main/docs/LEARNING_PATH.md) has the curated route with time estimates and "what you can diagnose after this."
 
-- `docs/spark-ui-guide.md` — symptom → which UI tab.
-- `docs/troubleshooting.md` — symptom → cause → fix.
-- `docs/CURRICULUM_BRIEF.md` — pedagogical rationale for each track.
+ships with the repo:
+- [`spark-ui-guide.md`](https://github.com/Saketkr21/lakehouse-lab/blob/main/docs/spark-ui-guide.md) → symptom → which UI tab
+- [`troubleshooting.md`](https://github.com/Saketkr21/lakehouse-lab/blob/main/docs/troubleshooting.md) → symptom → cause → fix
+- [`CATALOG_FORMAT_MATRIX.md`](https://github.com/Saketkr21/lakehouse-lab/blob/main/docs/CATALOG_FORMAT_MATRIX.md) → honest what-works-where grid for catalogs × formats
 
----
-
-## Who this is for
-
-- **Junior / mid data engineers** who want to see production failure modes without production risk.
-- **Interviewers and candidates** — the incident cards are excellent system-design and on-call practice material.
-- **Team leads running onboarding** — pick five modules, run them as an offsite, and your team has actually *seen* a shuffle spill.
+**Apache 2.0.** fork it. teach with it. remix it for your team.
 
 ---
 
-## What I'd love back
+## the ask
 
-If you run through a module and something's confusing, missing, or wrong: **open an issue** at [github.com/Saketkr21/lakehouse-lab/issues](https://github.com/Saketkr21/lakehouse-lab/issues). Include which module, which symptom you saw, and what was unclear.
+**pick one. tonight.**
 
-If you have a favorite failure mode I haven't covered — Delta Lake conflict resolution, Kafka Streams state stores, Airflow deferrable operators — a PR with a new module in Break → Detect → Fix → Prove format is very welcome.
+- `SPK-1` if you've ever stared at a Spark job that wouldn't finish
+- `CAP-2` if you're prepping for interviews or on-call anxiety hits different
+- `CDC-5` if you've ever asked "why did the postgres slot eat all my disk"
+- `LAK-2` if your Iceberg reads get slower every week
+
+then:
+
+1. **[star the repo](https://github.com/Saketkr21/lakehouse-lab)** — if a module saves you an incident someday
+2. **[open an issue](https://github.com/Saketkr21/lakehouse-lab/issues)** — if anything's confusing, missing, or wrong. name the module + what you saw.
+3. **send it to a teammate** — the one about to hit their first shuffle skew
+
+got a failure mode i haven't covered? — Delta conflict resolution, Kafka Streams state stores, Airflow deferrable ops, GE reference suites? PRs welcome. same Break → Detect → Fix → Prove shape.
+
 
 ### ⭐⭐⭐ Star the repo if you find this useful. ⭐⭐⭐
 <!-- ![Upvote Please](../public/upvote-pls.png) -->
@@ -131,4 +202,6 @@ If you have a favorite failure mode I haven't covered — Delta Lake conflict re
 
 ---
 
-*I write about lakehouses, dbt patterns, and the plumbing that makes data platforms feel boring. Portfolio: [saketkumar.pages.dev](https://saketkumar.pages.dev) · [LinkedIn](https://linkedin.com/in/saketkr21) · [GitHub](https://github.com/Saketkr21).*
+*writing about lakehouses, dbt patterns, and the plumbing that makes data platforms feel boring. the shortest path from "i've read the docs" to "i've broken it and fixed it" — that's what this repo is.*
+
+*[portfolio](https://saketkumar.pages.dev) · [linkedin](https://linkedin.com/in/saketkr21) · [github](https://github.com/Saketkr21)*
